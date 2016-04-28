@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raise.ums.dao.UserDao">
+	<cache type="com.raise.core.mybatis.cache.FacadeCache" />
+	<resultMap id="UserResultMap" type="com.raise.ums.entity.UserEntity" extends="Commons.resultMapSql">
+		<result property="name" column="NAME" jdbcType="VARCHAR"/>
+		<result property="account" column="ACCOUNT" jdbcType="VARCHAR"/>
+		<result property="password" column="PASSWORD" jdbcType="VARCHAR"/>
+		<result property="email" column="EMAIL" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="columns">
+			<include refid="Commons.columnsSql"/>,
+			NAME,
+			ACCOUNT,
+			PASSWORD,
+			EMAIL
+	</sql>
+	
+	<insert id="add" parameterType="com.raise.ums.entity.UserEntity">
+		INSERT INTO user
+		(
+			<include refid="columns"></include>
+		)
+		VALUES 
+		(
+			<include refid="Commons.addValuesSql"/>,
+			#{name,jdbcType=VARCHAR}, 
+			#{account,jdbcType=VARCHAR}, 
+			#{password,jdbcType=VARCHAR},
+			#{email,jdbcType=VARCHAR}
+			
+		)
+	</insert>
+	
+	<select id="get"   parameterType="String" resultMap="UserResultMap">
+		SELECT 
+			<include refid="columns" /> 
+		FROM 
+			USER 
+		WHERE 
+			IS_DELETED='0'
+			AND ID=#{id}
+	</select>
+	
+	
+	<update id="update" parameterType="com.raise.ums.entity.UserEntity">
+		UPDATE USER SET
+			<include refid="Commons.updateSetsSql"/>,
+			ACCOUNT=#{account,jdbcType=VARCHAR},
+			PASSWORD=#{password,jdbcType=VARCHAR},
+			NAME_#{name,jdbcType=VARCHAR},
+			EMAIL=#{email,jdbcType=VARCHAR}
+		WHERE
+			ID=#{id}
+	</update>
+	
+	<update id="delete"  parameterType="String">
+		<include refid="Commons.params"/>
+		UPDATE USER SET
+			IS_DELETED='1',
+			UPDATED=#{currentTime,jdbcType=TIMESTAMP},
+			UPDATED_BY=#{currentUserId,jdbcType=VARCHAR}
+		WHERE
+			ID_=#{id}
+	</update>
+	
+	<update id="disable"  parameterType="String">
+		<include refid="Commons.params"/>
+		UPDATE 
+			USER 
+		SET
+			IS_ACTIVE_='0',
+			UPDATED=#{currentTime,jdbcType=TIMESTAMP},
+			UPDATED_BY=#{currentUserId,jdbcType=VARCHAR}
+		WHERE
+			ID_=#{id}
+	</update>
+	<update id="enable"  parameterType="String">
+		<include refid="Commons.params"/>
+		UPDATE 
+			USER 
+		SET
+			IS_ACTIVE='1',
+			UPDATED=#{currentTime,jdbcType=TIMESTAMP},
+			UPDATED_BY=#{currentUserId,jdbcType=VARCHAR}
+		WHERE
+			ID_=#{id}
+	</update>
+	
+	<!-- Operate by criteria -->
+	
+	<select id="getByCriteria" parameterType="com.raise.ums.manager.query.UserQuery" resultMap="UserResultMap">
+		SELECT 
+			<include refid="columns"></include>
+		<include refid="getByCriteriaSql" />
+	</select>
+	
+	<select id="countByCriteria" parameterType="com.raise.ums.manager.query.UserQuery" resultType="Long">
+		SELECT 
+			count(1)
+		<include refid="getByCriteriaSql" />
+	</select>
+
+	<sql id="getByCriteriaSql">
+		FROM 
+			USER RES
+		<include refid="Commons.querySql"/>
+	</sql>
+
+
+</mapper>

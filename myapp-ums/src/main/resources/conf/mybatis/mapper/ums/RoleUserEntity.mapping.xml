@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raise.ums.dao.RoleUserDao">
+	<cache type="com.raise.core.mybatis.cache.FacadeCache" />
+	<resultMap id="ROLE_USERResultMap" type="com.raise.ums.entity.RoleUserEntity" extends="Commons.resultMapSql">
+		<result property="roleId" column="ROLE_USER_ID" jdbcType="VARCHAR"/>
+		<result property="userId" column="USER_ID" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="columns">
+			<include refid="Commons.columnsSql"/>,
+			ROLE_USER_ID,
+			USER_ID
+	</sql>
+	
+	<insert id="add" parameterType="com.raise.ums.entity.RoleUserEntity">
+		INSERT INTO ROLE_USER
+		(
+			<include refid="columns"></include>
+		)
+		VALUES 
+		(
+			<include refid="Commons.addValuesSql"/>,
+			#{roleId,jdbcType=VARCHAR}, 
+			#{userId,jdbcType=VARCHAR}
+			
+		)
+	</insert>
+	
+	<select id="get"   parameterType="String" resultMap="ROLE_USERResultMap">
+		SELECT 
+			<include refid="columns" /> 
+		FROM 
+			ROLE_USER 
+		WHERE 
+			IS_DELETED='0'
+			AND ID=#{id}
+	</select>
+	
+	
+	<update id="update" parameterType="com.raise.ums.entity.RoleUserEntity">
+		UPDATE ROLE_USER SET
+			<include refid="Commons.updateSetsSql"/>,
+			ROLE_USER_ID=#{roleId,jdbcType=VARCHAR}, 
+			USER_ID=#{userId,jdbcType=VARCHAR}
+		WHERE
+			ID=#{id}
+	</update>
+	
+	<update id="delete"  parameterType="String">
+		<include refid="Commons.params"/>
+		UPDATE ROLE_USER SET
+			IS_DELETED='1',
+			UPDATED=#{currentTime,jdbcType=TIMESTAMP},
+			UPDATED_BY=#{currentROLE_USERId,jdbcType=VARCHAR}
+		WHERE
+			ID_=#{id}
+	</update>
+	
+	<update id="disable"  parameterType="String">
+		<include refid="Commons.params"/>
+		UPDATE 
+			ROLE_USER 
+		SET
+			IS_ACTIVE_='0',
+			UPDATED=#{currentTime,jdbcType=TIMESTAMP},
+			UPDATED_BY=#{currentROLE_USERId,jdbcType=VARCHAR}
+		WHERE
+			ID_=#{id}
+	</update>
+	<update id="enable"  parameterType="String">
+		<include refid="Commons.params"/>
+		UPDATE 
+			ROLE_USER 
+		SET
+			IS_ACTIVE='1',
+			UPDATED=#{currentTime,jdbcType=TIMESTAMP},
+			UPDATED_BY=#{currentROLE_USERId,jdbcType=VARCHAR}
+		WHERE
+			ID_=#{id}
+	</update>
+	
+	<!-- Operate by criteria -->
+	
+	<select id="getByCriteria" parameterType="com.raise.ums.manager.query.RoleUserQuery" resultMap="ROLE_USERResultMap">
+		SELECT 
+			<include refid="columns"></include>
+		<include refid="getByCriteriaSql" />
+	</select>
+	
+	<select id="countByCriteria" parameterType="com.raise.ums.manager.query.RoleUserQuery" resultType="Long">
+		SELECT 
+			count(1)
+		<include refid="getByCriteriaSql" />
+	</select>
+
+	<sql id="getByCriteriaSql">
+		FROM 
+			ROLE_USER RES
+		<include refid="Commons.querySql"/>
+	</sql>
+
+
+</mapper>
