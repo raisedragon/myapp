@@ -13,7 +13,6 @@
 			<groupId>com.raise</groupId>
 			<artifactId>myapp-core</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>com.101tec</groupId>
 			<artifactId>zkclient</artifactId>
