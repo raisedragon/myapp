@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.raise</groupId>
-		<artifactId>myapp-parent</artifactId>
+		<artifactId>myapp</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>myapp-ums</artifactId>
@@ -142,7 +142,6 @@
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
-			<version>${assertj-core-version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
