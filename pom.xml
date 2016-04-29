@@ -76,6 +76,7 @@
 				<groupId>com.alibaba</groupId>
 				<artifactId>dubbo</artifactId>
 				<version>${dubbo.version}</version>
+				
 				<exclusions>
 					<exclusion>
 						<artifactId>spring</artifactId>
